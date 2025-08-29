@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liens Viande</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 20px; }
+    .back { display: inline-block; margin-bottom: 15px; color: #4CAF50; font-weight: bold; text-decoration: none; }
+    form {
+      display: flex; flex-direction: column; max-width: 400px; margin: auto;
+      gap: 10px; margin-bottom: 20px;
+    }
+    input, button {
+      padding: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc;
+    }
+    button { cursor: pointer; background: #4CAF50; color: white; border: none; font-weight: bold; }
+    button:hover { background: #45a049; }
+    ul { list-style: none; padding: 0; }
+    li {
+      background: white; padding: 10px; margin: 5px 0; border-radius: 8px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    a { text-decoration: none; color: #007bff; }
+    .delete {
+      background: red; color: white; border: none; padding: 5px 10px;
+      cursor: pointer; border-radius: 6px; font-size: 14px;
+    }
+    .delete:hover { background: darkred; }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back">⬅ Retour au menu</a>
+  <h1>🥩 Liens Viande</h1>
+
+  <form id="linkForm">
+    <input type="text" id="title" placeholder="Nom du lien" required>
+    <input type="url" id="url" placeholder="URL (https://...)" required>
+    <button type="submit">Ajouter le lien</button>
+  </form>
+
+  <ul id="linkList"></ul>
+
+  <script>
+    const category = "viande";
+    const form = document.getElementById('linkForm');
+    const linkList = document.getElementById('linkList');
+    let links = JSON.parse(localStorage.getItem(category)) || [];
+
+    function renderLinks() {
+      linkList.innerHTML = '';
+      links.forEach((link, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <a href="${link.url}" target="_blank">${link.title}</a>
+          <button class="delete" onclick="deleteLink(${index})">Supprimer</button>
+        `;
+        linkList.appendChild(li);
+      });
+      localStorage.setItem(category, JSON.stringify(links));
+    }
+
+    function deleteLink(index) {
+      links.splice(index, 1);
+      renderLinks();
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value.trim();
+      const url = document.getElementById('url').value.trim();
+      if (title && url) {
+        links.push({ title, url });
+        renderLinks();
+        form.reset();
+      }
+    });
+
+    renderLinks();
+  </script>
+</body>
+</html>
