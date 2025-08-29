@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu des Liens</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 20px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;
+    }
+    h1 { margin-bottom: 20px; }
+    .menu {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; width: 100%; max-width: 600px;
+    }
+    a {
+      display: block; text-align: center; padding: 20px; background: #4CAF50; color: white;
+      text-decoration: none; border-radius: 10px; font-size: 18px; transition: background 0.2s;
+    }
+    a:hover { background: #45a049; }
+  </style>
+</head>
+<body>
+  <h1>📖 Menu des Liens</h1>
+  <div class="menu">
+    <a href="sauce.html">🥣 Sauce</a>
+    <a href="viande.html">🥩 Viande</a>
+    <a href="dessert.html">🍰 Dessert</a>
+    <a href="accompagnement.html">🥔 Accompagnement</a>
+  </div>
+</body>
+</html>
