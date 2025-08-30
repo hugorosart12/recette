@@ -27,23 +27,27 @@ a { color:#007BFF; text-decoration:none; margin-right:10px; }
 <ul id="linkList"></ul>
 
 <script>
-const sheetAPI = "https://script.google.com/macros/s/AKfycbzpDs5GH1KnPIrdJosoLGgdFvUp1MUIiTLEPsWqal3g4ewwniM58cQhY4X2qr4tAWkH/exec";
+const sheetAPI = "https://script.google.com/macros/s/AKfycbwSRrGcEoJVxLaA9fUPPf5M8hQjXPAjtfMMlvh-LxJCZE0Nv4V8WyiLrY6RL9ZToomN/exec";
 const category = "sauce";
 const linkList = document.getElementById('linkList');
 const form = document.getElementById('linkForm');
 
 // Charger les liens
 async function loadLinks(){
-  const res = await fetch(sheetAPI);
-  const data = await res.json();
-  linkList.innerHTML = '';
-  data.forEach(item=>{
-    if(item.category === category){
-      const li = document.createElement('li');
-      li.innerHTML = `<a href="${item.url}" target="_blank">${item.title}</a>`;
-      linkList.appendChild(li);
-    }
-  });
+  try{
+    const res = await fetch(sheetAPI);
+    const data = await res.json();
+    linkList.innerHTML = '';
+    data.forEach(item=>{
+      if(item.category === category){
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${item.url}" target="_blank">${item.title}</a>`;
+        linkList.appendChild(li);
+      }
+    });
+  }catch(err){
+    console.error("Erreur lors du chargement des liens:", err);
+  }
 }
 
 // Ajouter un lien
@@ -52,13 +56,17 @@ form.addEventListener('submit', async e=>{
   const title = document.getElementById('title').value.trim();
   const url = document.getElementById('url').value.trim();
   if(title && url){
-    await fetch(sheetAPI, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({category, title, url})
-    });
-    form.reset();
-    loadLinks();
+    try{
+      await fetch(sheetAPI, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({category, title, url})
+      });
+      form.reset();
+      loadLinks();
+    }catch(err){
+      console.error("Erreur lors de l'ajout du lien:", err);
+    }
   }
 });
 
