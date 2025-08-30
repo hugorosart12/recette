@@ -16,7 +16,7 @@ async function loadCSV(url, listId) {
     });
 }
 
-// Remplacer par vos URL GitHub RAW
-loadCSV('https://raw.githubusercontent.com/TON-UTILISATEUR/TON-DEPOT/main/data/sauces.csv', 'sauces-list');
-loadCSV('https://raw.githubusercontent.com/TON-UTILISATEUR/TON-DEPOT/main/data/viandes.csv', 'viandes-list');
-loadCSV('https://raw.githubusercontent.com/TON-UTILISATEUR/TON-DEPOT/main/data/desserts.csv', 'desserts-list');
+// URLs RAW pour hugorosart12/recette
+loadCSV('https://raw.githubusercontent.com/hugorosart12/recette/main/data/sauces.csv', 'sauces-list');
+loadCSV('https://raw.githubusercontent.com/hugorosart12/recette/main/data/viandes.csv', 'viandes-list');
+loadCSV('https://raw.githubusercontent.com/hugorosart12/recette/main/data/desserts.csv', 'desserts-list');
