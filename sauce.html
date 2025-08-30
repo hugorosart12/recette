@@ -3,78 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Liens Sauce</title>
+<title>Recettes - Sauces</title>
 <style>
-body { font-family: Arial; background:#f4f4f9; padding:20px;}
-h1 {text-align:center;}
-a.back {display:inline-block; margin-bottom:15px; color:#4CAF50; text-decoration:none;}
-form {display:flex; flex-direction:column; max-width:400px; margin:auto; gap:10px; margin-bottom:20px;}
-input,button {padding:10px; font-size:16px; border-radius:8px; border:1px solid #ccc;}
-button {cursor:pointer; background:#4CAF50; color:white; border:none; font-weight:bold;}
-ul {list-style:none; padding:0; max-width:500px; margin:auto;}
-li {background:white; padding:10px; margin:5px 0; border-radius:8px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-li a {color:#007bff; text-decoration:none;}
-.delete {background:red; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:6px;}
+body { font-family: Arial; text-align: center; padding:20px; background:#fafafa; }
+form { margin-bottom: 20px; }
+input { padding: 8px; margin: 5px; }
+button { padding: 8px 12px; margin: 5px; cursor:pointer; }
+ul { list-style:none; padding:0; max-width:500px; margin:auto; }
+li { margin:10px 0; display:flex; justify-content:space-between; align-items:center; }
+a { color:#007BFF; text-decoration:none; margin-right:10px; }
 </style>
 </head>
 <body>
-<a href="index.html" class="back">⬅ Retour</a>
-<h1>🥣 Liens Sauce</h1>
+<h1>Recettes - Sauces</h1>
+<a href="index.html">⬅ Retour</a>
 
 <form id="linkForm">
-  <input type="text" id="title" placeholder="Nom du lien" required>
-  <input type="url" id="url" placeholder="URL (https://...)" required>
-  <button type="submit">Ajouter le lien</button>
+<input type="text" id="title" placeholder="Nom de la recette" required>
+<input type="url" id="url" placeholder="Lien" required>
+<button type="submit">Ajouter</button>
 </form>
 
 <ul id="linkList"></ul>
 
 <script>
-const sheetAPI = "https://sheetdb.io/api/v1/2i4ted6ps6h5e";
+const sheetAPI = "https://script.google.com/macros/s/AKfycbzpDs5GH1KnPIrdJosoLGgdFvUp1MUIiTLEPsWqal3g4ewwniM58cQhY4X2qr4tAWkH/exec";
 const category = "sauce";
 const linkList = document.getElementById('linkList');
 const form = document.getElementById('linkForm');
 
 // Charger les liens
-async function loadLinks() {
-    const res = await fetch(sheetAPI);
-    const data = await res.json();
-    linkList.innerHTML = '';
-    data.forEach(item => {
-        if(item.category === category){
-            const li = document.createElement('li');
-            li.innerHTML = `<a href="${item.url}" target="_blank">${item.title}</a>
-                            <button class="delete" onclick="deleteLink('${item.title}','${item.url}')">Supprimer</button>`;
-            linkList.appendChild(li);
-        }
-    });
+async function loadLinks(){
+  const res = await fetch(sheetAPI);
+  const data = await res.json();
+  linkList.innerHTML = '';
+  data.forEach(item=>{
+    if(item.category === category){
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="${item.url}" target="_blank">${item.title}</a>`;
+      linkList.appendChild(li);
+    }
+  });
 }
 
 // Ajouter un lien
-form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const title = document.getElementById('title').value.trim();
-    const url = document.getElementById('url').value.trim();
-    if(title && url){
-        await fetch(sheetAPI, {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({data:{category, title, url}})
-        });
-        form.reset();
-        loadLinks();
-    }
-});
-
-// Supprimer un lien
-async function deleteLink(title, url){
-    await fetch(`${sheetAPI}/search?title=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, {method:'DELETE'});
+form.addEventListener('submit', async e=>{
+  e.preventDefault();
+  const title = document.getElementById('title').value.trim();
+  const url = document.getElementById('url').value.trim();
+  if(title && url){
+    await fetch(sheetAPI, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({category, title, url})
+    });
+    form.reset();
     loadLinks();
-}
+  }
+});
 
 loadLinks();
 </script>
 </body>
 </html>
-
-
