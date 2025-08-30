@@ -1,79 +1,79 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liens Sauce</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 20px; }
-    h1 { text-align: center; margin-bottom: 20px; }
-    .back { display: inline-block; margin-bottom: 15px; color: #4CAF50; font-weight: bold; text-decoration: none; }
-    form { display: flex; flex-direction: column; max-width: 400px; margin: auto; gap: 10px; margin-bottom: 20px; }
-    input, button { padding: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; }
-    button { cursor: pointer; background: #4CAF50; color: white; border: none; font-weight: bold; }
-    ul { list-style: none; padding: 0; }
-    li { background: white; padding: 10px; margin: 5px 0; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
-    a { text-decoration: none; color: #007bff; }
-    .delete { background: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 6px; font-size: 14px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liens Sauce</title>
+<style>
+body { font-family: Arial; background:#f4f4f9; padding:20px;}
+h1 {text-align:center;}
+a.back {display:inline-block; margin-bottom:15px; color:#4CAF50; text-decoration:none;}
+form {display:flex; flex-direction:column; max-width:400px; margin:auto; gap:10px; margin-bottom:20px;}
+input,button {padding:10px; font-size:16px; border-radius:8px; border:1px solid #ccc;}
+button {cursor:pointer; background:#4CAF50; color:white; border:none; font-weight:bold;}
+ul {list-style:none; padding:0; max-width:500px; margin:auto;}
+li {background:white; padding:10px; margin:5px 0; border-radius:8px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+li a {color:#007bff; text-decoration:none;}
+.delete {background:red; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:6px;}
+</style>
 </head>
 <body>
-  <a href="index.html" class="back">⬅ Retour au menu</a>
-  <h1>🥣 Liens Sauce</h1>
+<a href="index.html" class="back">⬅ Retour</a>
+<h1>🥣 Liens Sauce</h1>
 
-  <form id="linkForm">
-    <input type="text" id="title" placeholder="Nom du lien" required>
-    <input type="url" id="url" placeholder="URL (https://...)" required>
-    <button type="submit">Ajouter le lien</button>
-  </form>
+<form id="linkForm">
+  <input type="text" id="title" placeholder="Nom du lien" required>
+  <input type="url" id="url" placeholder="URL (https://...)" required>
+  <button type="submit">Ajouter le lien</button>
+</form>
 
-  <ul id="linkList"></ul>
+<ul id="linkList"></ul>
 
-  <script>
-    const sheetAPI = "https://sheetdb.io/api/v1/2i4ted6ps6h5e";
-    const category = "sauce";
-    const linkList = document.getElementById('linkList');
-    const form = document.getElementById('linkForm');
+<script>
+const sheetAPI = "https://sheetdb.io/api/v1/2i4ted6ps6h5e";
+const category = "sauce";
+const linkList = document.getElementById('linkList');
+const form = document.getElementById('linkForm');
 
-    // Charger les liens
-    async function loadLinks() {
-      const res = await fetch(sheetAPI);
-      const data = await res.json();
-      linkList.innerHTML = '';
-      data.forEach(item => {
+// Charger les liens
+async function loadLinks() {
+    const res = await fetch(sheetAPI);
+    const data = await res.json();
+    linkList.innerHTML = '';
+    data.forEach(item => {
         if(item.category === category){
-          const li = document.createElement('li');
-          li.innerHTML = `<a href="${item.url}" target="_blank">${item.title}</a>
-                          <button class="delete" onclick="deleteLink('${item._id}')">Supprimer</button>`;
-          linkList.appendChild(li);
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="${item.url}" target="_blank">${item.title}</a>
+                            <button class="delete" onclick="deleteLink('${item._id}')">Supprimer</button>`;
+            linkList.appendChild(li);
         }
-      });
-    }
+    });
+}
 
-    // Ajouter un lien
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      const title = document.getElementById('title').value.trim();
-      const url = document.getElementById('url').value.trim();
-      if(title && url){
+// Ajouter un lien
+form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const title = document.getElementById('title').value.trim();
+    const url = document.getElementById('url').value.trim();
+    if(title && url){
         await fetch(sheetAPI, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({data: {category, title, url}})
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({data:{category, title, url}})
         });
         form.reset();
         loadLinks();
-      }
-    });
-
-    // Supprimer un lien
-    async function deleteLink(id) {
-      await fetch(`${sheetAPI}/${id}`, { method: 'DELETE' });
-      loadLinks();
     }
+});
 
-    // Initialiser
+// Supprimer un lien
+async function deleteLink(id){
+    await fetch(`${sheetAPI}/id/${id}`, {method:'DELETE'});
     loadLinks();
-  </script>
+}
+
+loadLinks();
+</script>
 </body>
 </html>
+
