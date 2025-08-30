@@ -44,7 +44,7 @@ async function loadLinks() {
         if(item.category === category){
             const li = document.createElement('li');
             li.innerHTML = `<a href="${item.url}" target="_blank">${item.title}</a>
-                            <button class="delete" onclick="deleteLink('${item._id}')">Supprimer</button>`;
+                            <button class="delete" onclick="deleteLink('${item.title}','${item.url}')">Supprimer</button>`;
             linkList.appendChild(li);
         }
     });
@@ -67,8 +67,8 @@ form.addEventListener('submit', async e => {
 });
 
 // Supprimer un lien
-async function deleteLink(id){
-    await fetch(`${sheetAPI}/id/${id}`, {method:'DELETE'});
+async function deleteLink(title, url){
+    await fetch(`${sheetAPI}/search?title=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, {method:'DELETE'});
     loadLinks();
 }
 
@@ -76,4 +76,5 @@ loadLinks();
 </script>
 </body>
 </html>
+
 
